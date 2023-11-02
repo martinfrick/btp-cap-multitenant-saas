@@ -2,10 +2,10 @@ service:
   stages:
     Build:
       runFirst:
-        command: "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
+        command: "touch package.json && npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
 
 general:
-  buildTool: "docker"
+  buildTool: "npm"
   chartPath: deploy/kyma/charts/sustainable-saas
 stages:
   Build:
