@@ -13,7 +13,7 @@ service:
           # Disable debug mode (turn off echo for all commands and variables)
           set +x
 
-          echo "$ValuesPrivateYaml" > ./cloudcitransfer/values-private.yaml
+          echo "$ValuesPrivateYaml" > ./deploy/kyma/charts/sustainable-saas/values-private.yaml 
 
           # Enable debug mode (echo commands and variables) again
           set -x
@@ -33,7 +33,7 @@ stages:
     namespace: susaas-cicd
     helmValues:
       - ./deploy/kyma/charts/sustainable-saas/values.yaml 
-      - ./cloudcitransfer/values-private.yaml
+      - ./deploy/kyma/charts/sustainable-saas/values-private.yaml 
 steps:
   buildExecute:
     npmRunScripts: [ 'cds-build' ]  
@@ -41,54 +41,41 @@ steps:
     cnbBuild: true
     helmExecute: false
   cnbBuild:
-    containerImageTag: latest
     containerRegistryUrl: docker.io
     dockerConfigJsonCredentialsId: susaas-cicd-docker-config
     multipleImages:
       - path: ./code/router
         containerImageName: martinfrick772/susaas-router
-        containerImageAlias: router
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_router
       - path: ./code/gen/srv
         containerImageName: martinfrick772/susaas-srv
-        containerImageAlias: srv
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_srv
       - path: ./code/gen/api
         containerImageName: martinfrick772/susaas-api
-        containerImageAlias: api
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_api
       - path: ./code/broker
         containerImageName: martinfrick772/susaas-broker
-        containerImageAlias: broker
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_broker
       - path: ./code/gen/db-com
         containerImageName: martinfrick772/susaas-db-com
-        containerImageAlias: dbcom
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_db_com
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
-        containerImageAlias: html5deployer
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: martinfrick772/susaas_html5_deployer
   kubernetesDeploy:
     deployTool: helm3
     additionalParameters:
       - "--create-namespace"
     valuesMapping:
-      router.image.repository: image.router.repository
-      router.image.tag: image.router.tag
-      srv.image.repository: image.srv.repository
-      srv.image.tag: image.srv.tag
-      api.image.repository: image.api.repository
-      api.image.tag: image.api.tag
-      broker.image.repository: image.broker.repository
-      broker.image.tag: image.broker.tag
-      hana_deployer.image.repository: image.dbcom.repository
-      hana_deployer.image.tag: image.dbcom.tag
-      html5_apps_deployer.image.repository: image.html5deployer.repository
-      html5_apps_deployer.image.tag: image.html5deployer.tag
+      router.image.repository: image.martinfrick772/susaas_router.repository
+      router.image.tag: image.martinfrick772/susaas_router.tag
+      srv.image.repository: image.martinfrick772/susaas_srv.repository
+      srv.image.tag: image.martinfrick772/susaas_srv.tag
+      api.image.repository: image.martinfrick772/susaas_api.repository
+      api.image.tag: image.martinfrick772/susaas_api.tag
+      broker.image.repository: image.martinfrick772/susaas_broker.repository
+      broker.image.tag: image.martinfrick772/susaas_broker.tag
+      hana_deployer.image.repository: image.martinfrick772/susaas_db_com.repository
+      hana_deployer.image.tag: image.martinfrick772/susaas_db_com.tag
+      html5_apps_deployer.image.repository: image.martinfrick772/susaas_html5_deployer.repository
+      html5_apps_deployer.image.tag: image.martinfrick772/susaas_html5_deployer.tag
