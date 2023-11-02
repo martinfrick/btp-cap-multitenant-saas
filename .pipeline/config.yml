@@ -1,8 +1,6 @@
 general:
-  buildTool: "npm"
+  buildTool: "docker"
   chartPath: deploy/kyma/charts/sustainable-saas
-service:
-  buildToolVersion: "N18"
 stages:
   Build:
     runFirst:
@@ -40,3 +38,17 @@ steps:
         containerImageName: martinfrick772/susaas-db-com
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
+  kubernetesDeploy:
+    valuesMapping:
+      router.image.repository: martinfrick772/susaas-router
+      router.image.tag: latest
+      srv.image.repository: martinfrick772/susaas-srv
+      srv.image.tag: latest
+      api.image.repository: martinfrick772/susaas-api
+      api.image.tag: latest
+      broker.image.repository: martinfrick772/susaas-broker
+      broker.image.tag: latest
+      hana_deployer.image.repository: martinfrick772/susaas-db-com
+      hana_deployer.image.tag: latest
+      html5_apps_deployer.image.repository: martinfrick772/susaas-html5-deployer
+      html5_apps_deployer.image.tag: latest
