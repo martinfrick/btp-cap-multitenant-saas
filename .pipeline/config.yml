@@ -32,6 +32,7 @@ stages:
     kubeConfigFileCredentialsId: susaas-cicd-kube-config
     namespace: susaas-cicd
     helmValues:
+      - ./deploy/kyma/charts/sustainable-saas/values.yaml 
       - ./cloudcitransfer/values-private.yaml
 steps:
   buildExecute:
@@ -42,43 +43,41 @@ steps:
   cnbBuild:
     containerImageTag: latest
     containerRegistryUrl: docker.io
+    dockerImage: 'paketobuildpacks/builder:base'
     dockerConfigJsonCredentialsId: susaas-cicd-docker-config
     multipleImages:
       - path: ./code/router
         containerImageName: martinfrick772/susaas-router
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: router
       - path: ./code/gen/srv
         containerImageName: martinfrick772/susaas-srv
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: srv
       - path: ./code/gen/api
         containerImageName: martinfrick772/susaas-api
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: api
       - path: ./code/broker
         containerImageName: martinfrick772/susaas-broker
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: broker
       - path: ./code/gen/db-com
         containerImageName: martinfrick772/susaas-db-com
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: dbcom
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
-        buildpacks:
-          - "gcr.io/paketo-buildpacks/nodejs"
+        containerImageAlias: html5deployer
   kubernetesDeploy:
+    deployTool: helm3
+    additionalParameters:
+      - "--create-namespace"
     valuesMapping:
-      router.image.repository: martinfrick772/susaas-router
-      router.image.tag: latest
-      srv.image.repository: martinfrick772/susaas-srv
-      srv.image.tag: latest
-      api.image.repository: martinfrick772/susaas-api
-      api.image.tag: latest
-      broker.image.repository: martinfrick772/susaas-broker
-      broker.image.tag: latest
-      hana_deployer.image.repository: martinfrick772/susaas-db-com
-      hana_deployer.image.tag: latest
-      html5_apps_deployer.image.repository: martinfrick772/susaas-html5-deployer
-      html5_apps_deployer.image.tag: latest
+      router.image.repository: image.router.repository
+      router.image.tag: image.router.tag
+      srv.image.repository: image.srv.repository
+      srv.image.tag: image.srv.tag
+      api.image.repository: image.api.repository
+      api.image.tag: image.api.tag
+      broker.image.repository: image.broker.repository
+      broker.image.tag: image.broker.tag
+      hana_deployer.image.repository: image.dbcom.repository
+      hana_deployer.image.tag: image.dbcom.tag
+      html5_apps_deployer.image.repository: image.html5deployer.repository
+      html5_apps_deployer.image.tag: image.html5deployer.tag
