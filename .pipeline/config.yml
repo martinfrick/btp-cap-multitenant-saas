@@ -1,10 +1,14 @@
+service:
+  stages:
+    Build:
+      runFirst:
+        command: "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
+
 general:
   buildTool: "docker"
   chartPath: deploy/kyma/charts/sustainable-saas
 stages:
   Build:
-    runFirst:
-      command: "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
     npmExecuteLint: false
   Additional Unit Tests:
     npmExecuteScripts: false
