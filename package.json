@@ -8,7 +8,7 @@
       "node": "^18.x"
     },
     "scripts": {
-      "cds-build": "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
+      "cds-build": "npm --prefix ./deploy/kyma run install && npm --prefix ./deploy/kyma run build && npm --prefix ./deploy/kyma run ui:apps"
     }
   }
   
