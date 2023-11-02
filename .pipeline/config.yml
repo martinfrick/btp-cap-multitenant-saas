@@ -1,0 +1,41 @@
+general:
+  buildTool: "npm"
+  chartPath: deploy/kyma/charts/sustainable-saas
+service:
+  buildToolVersion: "N18"
+stages:
+  Build:
+    npmExecuteLint: false
+  Additional Unit Tests:
+    npmExecuteScripts: false
+  Acceptance:
+    kubernetesDeploy: false
+  Compliance:
+    sonarExecuteScan: false
+  Release:
+    kubernetesDeploy: true
+    deploymentName: susaas-cicd
+    kubeConfigFileCredentialsId: susaas-cicd-kube-config
+    namespace: susaas-cicd
+steps:
+  buildExecute:
+    npmRunScripts: [ 'build' ]
+    npmInstall: false
+    cnbBuild: true
+    helmExecute: false
+  cnbBuild:
+    containerRegistryUrl: https://registry.hub.docker.com
+    dockerConfigJsonCredentialsId: susaas-cicd-docker-config
+    multipleImages:
+      - path: ./code/router
+        containerImageName: martinfrick772/susaas-router
+      - path: ./code/gen/srv
+        containerImageName: martinfrick772/susaas-srv
+      - path: ./code/gen/api
+        containerImageName: martinfrick772/susaas-api
+      - path: ./code/broker
+        containerImageName: martinfrick772/susaas-broker
+      - path: ./code/gen/db-com
+        containerImageName: martinfrick772/susaas-db-com
+      - path: ./code/app/html5-deployer
+        containerImageName: martinfrick772/susaas-html5-deployer
