@@ -3,6 +3,20 @@ general:
   chartPath: deploy/kyma/charts/sustainable-saas
 service:
   buildToolVersion: "N18"
+  stages:
+    Build:
+      credentialVariables:
+        - name: "ValuesPrivateYaml"
+          credentialId: "susaas-cicd-values-private-yaml"
+      runFirst: 
+        command: |
+          # Disable debug mode (turn off echo for all commands and variables)
+          set +x
+
+          echo "$ValuesPrivateYaml" > ./cloudcitransfer/values-private.yaml
+
+          # Enable debug mode (echo commands and variables) again
+          set -x
 stages:
   Build:
     npmExecuteLint: false
@@ -18,7 +32,7 @@ stages:
     kubeConfigFileCredentialsId: susaas-cicd-kube-config
     namespace: susaas-cicd
     helmValues:
-      - ./deploy/kyma/sustainable-saas/release.yaml
+      - ./cloudcitransfer/values-private.yaml
 steps:
   buildExecute:
     npmRunScripts: [ 'cds-build' ]  
@@ -26,21 +40,34 @@ steps:
     cnbBuild: true
     helmExecute: false
   cnbBuild:
-    containerRegistryUrl: https://index.docker.io/
+    containerImageTag: latest
+    containerRegistryUrl: docker.io
     dockerConfigJsonCredentialsId: susaas-cicd-docker-config
     multipleImages:
       - path: ./code/router
         containerImageName: martinfrick772/susaas-router
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/srv
         containerImageName: martinfrick772/susaas-srv
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/api
         containerImageName: martinfrick772/susaas-api
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/broker
         containerImageName: martinfrick772/susaas-broker
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/db-com
         containerImageName: martinfrick772/susaas-db-com
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
   kubernetesDeploy:
     valuesMapping:
       router.image.repository: martinfrick772/susaas-router
