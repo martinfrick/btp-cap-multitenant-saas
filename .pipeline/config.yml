@@ -5,6 +5,8 @@ service:
   buildToolVersion: "N18"
 stages:
   Build:
+    runFirst:
+      command: "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
     npmExecuteLint: false
   Additional Unit Tests:
     npmExecuteScripts: false
@@ -19,7 +21,6 @@ stages:
     namespace: susaas-cicd
 steps:
   buildExecute:
-    npmRunScripts: [ 'build' ]
     npmInstall: false
     cnbBuild: true
     helmExecute: false
