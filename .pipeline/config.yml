@@ -43,27 +43,38 @@ steps:
   cnbBuild:
     containerImageTag: latest
     containerRegistryUrl: docker.io
-    dockerImage: 'paketobuildpacks/builder:base'
     dockerConfigJsonCredentialsId: susaas-cicd-docker-config
     multipleImages:
       - path: ./code/router
         containerImageName: martinfrick772/susaas-router
         containerImageAlias: router
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/srv
         containerImageName: martinfrick772/susaas-srv
         containerImageAlias: srv
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/api
         containerImageName: martinfrick772/susaas-api
         containerImageAlias: api
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/broker
         containerImageName: martinfrick772/susaas-broker
         containerImageAlias: broker
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/db-com
         containerImageName: martinfrick772/susaas-db-com
         containerImageAlias: dbcom
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
         containerImageAlias: html5deployer
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
   kubernetesDeploy:
     deployTool: helm3
     additionalParameters:
