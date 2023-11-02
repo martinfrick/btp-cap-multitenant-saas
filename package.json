@@ -1,0 +1,14 @@
+{
+    "name": "susaas",
+    "version": "0.0.1",
+    "repository": "https://github.com/sap-samples/btp-cap-multitenant-susaas",
+    "license": "Apache License 2.0",
+    "description": "Sustainable SaaS",
+    "engines": {
+      "node": "^18.x"
+    },
+    "scripts": {
+      "cds-build": "npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
+    }
+  }
+  

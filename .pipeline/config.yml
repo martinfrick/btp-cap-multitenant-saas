@@ -1,13 +1,8 @@
-service:
-  buildToolVersion: "N18"
-  stages:
-    Build:
-      runFirst:
-        command: "touch package.json && npm i --include=dev --prefix=./code && npx -p @sap/cds-dk@7 cds build -in ./code --profile production"
-
 general:
   buildTool: "npm"
   chartPath: deploy/kyma/charts/sustainable-saas
+service:
+  buildToolVersion: "N18"
 stages:
   Build:
     npmExecuteLint: false
@@ -22,8 +17,11 @@ stages:
     deploymentName: susaas-cicd
     kubeConfigFileCredentialsId: susaas-cicd-kube-config
     namespace: susaas-cicd
+    helmValues:
+      - ./deploy/kyma/sustainable-saas/release.yaml
 steps:
   buildExecute:
+    npmRunScripts: [ 'cds-build' ]  
     npmInstall: false
     cnbBuild: true
     helmExecute: false
