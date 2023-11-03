@@ -47,21 +47,33 @@ steps:
       - path: ./code/router
         containerImageName: martinfrick772/susaas-router
         containerImageAlias: martinfrick772/susaas_router
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/srv
         containerImageName: martinfrick772/susaas-srv
         containerImageAlias: martinfrick772/susaas_srv
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/api
         containerImageName: martinfrick772/susaas-api
         containerImageAlias: martinfrick772/susaas_api
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/broker
         containerImageName: martinfrick772/susaas-broker
         containerImageAlias: martinfrick772/susaas_broker
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/gen/db-com
         containerImageName: martinfrick772/susaas-db-com
         containerImageAlias: martinfrick772/susaas_db_com
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
       - path: ./code/app/html5-deployer
         containerImageName: martinfrick772/susaas-html5-deployer
         containerImageAlias: martinfrick772/susaas_html5_deployer
+        buildpacks:
+          - "gcr.io/paketo-buildpacks/nodejs"
   kubernetesDeploy:
     deployTool: helm3
     additionalParameters:
