@@ -13,7 +13,7 @@ service:
           # Disable debug mode (turn off echo for all commands and variables)
           set +x
 
-          echo "$ValuesPrivateYaml" > ./deploy/kyma/charts/sustainable-saas/values-private.yaml 
+          echo "$ValuesPrivateYaml" > ./cloudcitransfer/values-private.yaml 
 
           # Enable debug mode (echo commands and variables) again
           set -x
@@ -33,7 +33,7 @@ stages:
     namespace: susaas-cicd
     helmValues:
       - ./deploy/kyma/charts/sustainable-saas/values.yaml 
-      - ./deploy/kyma/charts/sustainable-saas/values-private.yaml 
+      - ./cloudcitransfer/values-private.yaml 
 steps:
   buildExecute:
     npmRunScripts: [ 'cds-build' ]  
