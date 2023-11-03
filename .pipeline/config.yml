@@ -41,7 +41,6 @@ steps:
     cnbBuild: true
     helmExecute: false
   cnbBuild:
-    containerImageTag: latest
     containerRegistryUrl: docker.io
     dockerConfigJsonCredentialsId: susaas-cicd-docker-config
     multipleImages:
