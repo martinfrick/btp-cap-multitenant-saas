@@ -36,7 +36,7 @@ stages:
       - ./cloudcitransfer/values-private.yaml 
 steps:
   buildExecute:
-    npmRunScripts: [ 'cds-build' ]  
+    npmRunScripts: [ 'cicd' ]  
     npmInstall: false
     cnbBuild: true
     helmExecute: false
